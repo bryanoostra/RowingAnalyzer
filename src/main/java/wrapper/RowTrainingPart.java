@@ -1,13 +1,15 @@
 package wrapper;
 
+import org.jetbrains.annotations.NotNull;
 import org.omg.CORBA.portable.UnknownException;
 
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 
 /**
  * Created by stersteeg on 22/03/2017.
  */
-public class RowTraining {
+public class RowTrainingPart implements Comparable<RowTrainingPart> {
 
     private int id;
     private long time;
@@ -17,7 +19,7 @@ public class RowTraining {
     private int strokeRate;
     private int maxStrokeRate;
     private double avrDisPerStroke;
-    private long avrPage;
+    private long avrPace;
     private long avrMovingPace;
     private long bestPace;
     private int avrHeartRate;
@@ -25,9 +27,9 @@ public class RowTraining {
     private int calories;
 
 
-    public RowTraining(String input) throws UnknownException {
+    public RowTrainingPart(String input) throws UnknownException {
         try {
-            String[] values = input.split("," );
+            String[] values = input.split(",");
             id = Integer.parseInt(values[0]);
             time = stringToTime(values[1]);
             cumulative = stringToTime(values[2]);
@@ -36,7 +38,7 @@ public class RowTraining {
             strokeRate = Integer.parseInt(values[5]);
             maxStrokeRate = Integer.parseInt(values[6]);
             avrDisPerStroke = Double.parseDouble(values[7]);
-            avrPage = stringToTime(values[8]);
+            avrPace = stringToTime(values[8]);
             avrMovingPace = stringToTime(values[9]);
             bestPace = stringToTime(values[10]);
             avrHeartRate = Integer.parseInt(values[11]);
@@ -50,11 +52,31 @@ public class RowTraining {
     }
 
     private static long stringToTime(String text) {
+        int index = 0;
         long time = 0;
-        time += Integer.parseInt(text.substring(0, 2)) * 60000;
-        time += Integer.parseInt(text.substring(3, 5)) * 1000;
-        if(text.length() > 5) {
-            time += Integer.parseInt(text.substring(6, 7)) * 100;
+        try {
+            if(text.contains(".")) {
+                int i = text.indexOf('.');
+                time += Integer.parseInt(text.substring(i + 1, i + 2)) * 100;
+
+            }
+
+            if(text.split(":").length > 2) {
+                if(text.charAt(1) == ':') {
+                    time += Integer.parseInt(text.substring(index, index=+1)) * 3600000;
+                } else {
+                    time += Integer.parseInt(text.substring(index, index=+2)) * 3600000;
+                }
+                index++;
+            }
+            time += Integer.parseInt(text.substring(index, index+=2)) * 60000;
+            time += Integer.parseInt(text.substring(index+=1, index+=2)) * 1000;
+
+
+        } catch (Exception e) {
+            //e.printStackTrace();
+            //System.out.println("Error on:");
+            //System.out.println(text);
         }
         return time;
     }
@@ -91,12 +113,8 @@ public class RowTraining {
         return avrDisPerStroke;
     }
 
-    public RowTraining(int id) {
-        this.id = id;
-    }
-
-    public long getAvrPage() {
-        return avrPage;
+    public long getAvrPace() {
+        return avrPace;
     }
 
     public long getAvrMovingPace() {
@@ -117,5 +135,9 @@ public class RowTraining {
 
     public int getCalories() {
         return calories;
+    }
+
+    public int compareTo(@NotNull RowTrainingPart o) {
+        return Integer.compare(getStrokeRate(), o.getStrokeRate());
     }
 }
