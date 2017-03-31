@@ -16,7 +16,9 @@ class RowingAnalyzer(
             disposables += applicationComponent.trainingReader.readTraining(doc + ".csv").subscribe { string ->
                 try {
                     val part = RowTrainingPart(string)
-                    training.add(part)
+                    if(part.avrPace < 180000) { // filtering on results with paces > 3min
+                        training.add(part)
+                    }
                     //println(string)
                 } catch (e: UnknownException) {
                     //println("Invalid input")

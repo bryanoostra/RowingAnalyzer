@@ -39,6 +39,9 @@ public class RowingTraining {
     public long getPaceForBin(int minStrokeRate, int maxStrokeRate) {
         List<RowTrainingPart> list = getParts(minStrokeRate, maxStrokeRate);
         Collections.sort(list);
+        if(list.size() == 1) {
+            return list.get(0).getAvrPace();
+        }
         int middle = list.size() / 2;
         long minAvr = Util.getAvrangePace(list.subList(0, middle));
         long maxAvr = Util.getAvrangePace(list.subList(middle, list.size()));
