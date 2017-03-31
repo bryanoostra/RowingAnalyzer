@@ -3,9 +3,6 @@ package wrapper;
 import org.jetbrains.annotations.NotNull;
 import org.omg.CORBA.portable.UnknownException;
 
-import java.text.SimpleDateFormat;
-import java.util.Comparator;
-
 /**
  * Created by stersteeg on 22/03/2017.
  */
@@ -138,6 +135,6 @@ public class RowTrainingPart implements Comparable<RowTrainingPart> {
     }
 
     public int compareTo(@NotNull RowTrainingPart o) {
-        return Integer.compare(getStrokeRate(), o.getStrokeRate());
+        return Long.compare(getAvrPace(), o.getAvrPace());
     }
 }
